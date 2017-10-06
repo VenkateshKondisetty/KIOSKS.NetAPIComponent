@@ -31,10 +31,10 @@ namespace KIOSKS.NetAPIComponent.API_Caller
 
         }
 
-        public async Task<T> GetAPIResponse<T>()
+        public async Task<T> GetAPIResponse<T>(string query)
         {
             dynamic responseObj = null;
-            HttpResponseMessage response = await client.GetAsync("posts");
+            HttpResponseMessage response = await client.GetAsync(query);
             if (response.IsSuccessStatusCode)
             {
                 responseObj = await response.Content.ReadAsAsync<T>();
