@@ -19,7 +19,7 @@ namespace KIOSKS.NetAPIComponent.Controllers
         public async System.Threading.Tasks.Task<ActionResult> Index2()
         {
             API_Caller.APIClient apiClient = new API_Caller.APIClient();
-            await apiClient.GetAPIResponse(); //Using APIClient
+            await apiClient.GetAPIResponse<object>(); //object will be replaced by the specific object
             return View();
         }
     }
