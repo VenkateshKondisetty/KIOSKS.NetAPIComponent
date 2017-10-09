@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,11 +13,14 @@ namespace KIOSKS.NetAPIComponent.API_Caller
     public class APIClient
     {
         private HttpClient client;
-        private HttpClientHandler handler;
+       // private HttpClientHandler handler;
+        private Logger logger;
         public APIClient()
         {
             client = new HttpClient();
             client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/");
+            logger = LogManager.GetLogger("logfile");
+
             //handler = new HttpClientHandler();
             //handler.Credentials = new NetworkCredential("gfsuser", "gfsuser123!");
             //client = new HttpClient(handler);            
@@ -38,7 +42,8 @@ namespace KIOSKS.NetAPIComponent.API_Caller
             if (response.IsSuccessStatusCode)
             {
                 responseObj = await response.Content.ReadAsAsync<T>();
-            }
+                logger.Error("error");
+            }            
             return responseObj;
         }
     }
