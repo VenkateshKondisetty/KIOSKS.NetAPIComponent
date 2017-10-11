@@ -5,46 +5,60 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace KIOSKS.NetAPIComponent.API_Caller
 {
-    public class APIClient
+    public class APIClient : HttpClient
     {
         private HttpClient client;
-       // private HttpClientHandler handler;
+        private HttpClientHandler handler;
         private Logger logger;
         public APIClient()
         {
-            client = new HttpClient();
-            client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/");
+            //Start : Credentials
+            handler = new HttpClientHandler();
+            handler.Credentials = new NetworkCredential("gfsuser", "gfsuser123!");
+
+            //End : Credentials     
+            client = new HttpClient(handler);
+            client.BaseAddress = new Uri("https://uat1.woolworthsmoney.com.au/");            
+            
+
+            //Start : Default Headers 
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Authorization", "Basic Z2ZzdXNlcjpnZnN1c2VyMTIzIQ==");
+            
+            //End : Default Headers
+
+            //Start : logging
+
             logger = LogManager.GetLogger("logfile");
 
-            //handler = new HttpClientHandler();
-            //handler.Credentials = new NetworkCredential("gfsuser", "gfsuser123!");
-            //client = new HttpClient(handler);            
-            //client.BaseAddress = new Uri("https://uat1.woolworthsmoney.com.au/");
-            //client.DefaultRequestHeaders.Accept.Clear();
-            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            ////client.DefaultRequestHeaders.Add("content-length", "762");
-            //client.DefaultRequestHeaders.Add("date", "Thu, 05 Oct 2017 01:37:58 GMT");
-            //client.DefaultRequestHeaders.Add("x-akamai-staging", "ESSL");
-            //client.DefaultRequestHeaders.Add("status", "200");
-            //client.DefaultRequestHeaders.Add("x-xss-protection", "1;mode=block");
-
+            //End : logging
         }
 
         public async Task<T> GetAPIResponse<T>(string query)
         {
             dynamic responseObj = null;
-            HttpResponseMessage response = await client.GetAsync(query);
+            // HttpResponseMessage response = await client.GetAsync(query);
+            BodyObject body = new BodyObject { token = "ek1:a4303041aad645d0e26cb4a526d01558", usa = "old:1baa0dbdadcd14719511ec51b9379a00d2fbcc24661155ee1b08fd51d80ecdca" };
+            HttpResponseMessage response = await client.PostAsJsonAsync(query, body);
             if (response.IsSuccessStatusCode)
             {
                 responseObj = await response.Content.ReadAsAsync<T>();
-                logger.Error("error");
-            }            
+                //responseObj = await response.Content.ReadAsAsync<T>(); use this if you dont want deserialization to happen over here
+
+            }    
+            else
+            {
+                logger.Error(response.StatusCode);
+            }        
             return responseObj;
         }
     }
+
 }

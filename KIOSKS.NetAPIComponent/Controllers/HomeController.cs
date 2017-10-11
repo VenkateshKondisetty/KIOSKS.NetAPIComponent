@@ -9,17 +9,17 @@ namespace KIOSKS.NetAPIComponent.Controllers
     public class HomeController : Controller
     {
         // GET: Home
-        public ActionResult Index()
+        public ActionResult Index2()
         {
             API_Caller.ServiceClient restClient = new API_Caller.ServiceClient();
             restClient.GetServiceResponse<object>(); //Using RestClient
             return View();
         }
 
-        public async System.Threading.Tasks.Task<ActionResult> Index2()
+        public async System.Threading.Tasks.Task<ActionResult> Index()
         {
             API_Caller.APIClient apiClient = new API_Caller.APIClient();
-            await apiClient.GetAPIResponse<object>("posts"); //object will be replaced by the specific object
+            await apiClient.GetAPIResponse<object>("api/gift-card/detail"); //object will be replaced by the specific object
             return View();
         }
     }
