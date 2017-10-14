@@ -18,7 +18,7 @@ namespace KIOSKS.NetAPIComponent.Controllers
 
         public async System.Threading.Tasks.Task<ActionResult> Index()
         {
-            API_Caller.APIClient apiClient = new API_Caller.APIClient();
+            API_Caller.APIClient apiClient = new         API_Caller.APIClient();
             await apiClient.GetAPIResponse<object>("api/gift-card/detail"); //object will be replaced by the specific object
             return View();
         }
